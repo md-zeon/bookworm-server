@@ -85,8 +85,67 @@ const signupUser = async (req, res) => {
 	}
 };
 
-const signinUser = (req, res) => {
-	res.send("User logged in successfully.");
+const signinUser = async (req, res) => {
+	try {
+		const { email, password } = req.body;
+
+		// Validate input
+		if (!email || !password) {
+			return res.status(400).json({
+				success: false,
+				message: "Email and password are required",
+			});
+		}
+
+		// Find user by email
+		const user = await usersCollection.findOne({ email });
+		if (!user) {
+			return res.status(401).json({
+				success: false,
+				message: "Invalid email or password",
+			});
+		}
+
+		// Compare password
+		const isMatch = await bcrypt.compare(password, user.password);
+		if (!isMatch) {
+			return res.status(401).json({
+				success: false,
+				message: "Invalid email or password",
+			});
+		}
+
+		// Create JWT payload
+		const tokenPayload = {
+			id: user._id,
+			name: user.name,
+			email: user.email,
+			role: user.role,
+		};
+
+		const token = jwt.sign(tokenPayload, CONFIG.jwt_secret, {
+			expiresIn: "7d",
+		});
+
+		res.status(200).json({
+			success: true,
+			message: "User logged in successfully",
+			token,
+			user: {
+				id: user._id,
+				name: user.name,
+				email: user.email,
+				role: user.role,
+				photoURL: user.photoURL || "",
+			},
+		});
+	} catch (error) {
+		console.error("Signin error:", error);
+		res.status(500).json({
+			success: false,
+			message: "Internal server error",
+		});
+	}
 };
 
 const authController = {

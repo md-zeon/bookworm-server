@@ -1,12 +1,12 @@
 import express from "express";
-// import cors from "cors";
+import cors from "cors";
 import CONFIG from "./config/index.js";
 import { connectDB } from "./config/mongodb.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 const app = express();
 
 // Middleware to parse JSON bodies
-// app.use(cors());
+app.use(cors());
 app.use(express.json());
 
 async function run() {
