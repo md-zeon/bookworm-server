@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import CONFIG from "./config/index.js";
 import { connectDB } from "./config/mongodb.js";
+import authRoutes from "./modules/auth/auth.routes.js";
 const app = express();
 
 // Middleware to parse JSON bodies
@@ -15,6 +16,9 @@ async function run() {
 			console.log("Connecting to MongoDB in development mode...");
 			await connectDB();
 		}
+
+		// authentication routes
+		app.use("/api/v1/auth", authRoutes);
 
 		// Send a ping to confirm a successful connection
 		// await client.db("admin").command({ ping: 1 });
