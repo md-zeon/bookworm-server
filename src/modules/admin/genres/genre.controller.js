@@ -102,6 +102,10 @@ const updateGenre = async (req, res) => {
 			return res.status(200).json({
 				success: true,
 				message: "Genre updated successfully.",
+				data: {
+					_id: id,
+					name: updatedGenre.name,
+				},
 			});
 		} else {
 			return res.status(500).json({

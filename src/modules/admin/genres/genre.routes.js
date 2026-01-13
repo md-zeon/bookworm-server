@@ -1,6 +1,6 @@
 import express from "express";
-import authorize from "../../../middlewares/auth";
-import genreController from "./genre.controller";
+import authorize from "../../../middlewares/auth.js";
+import genreController from "./genre.controller.js";
 
 const router = express.Router();
 
