@@ -17,17 +17,13 @@ const signupUser = async (req, res) => {
 
 		// Check existing user
 		const existingUser = await usersCollection.findOne({ email });
+		if (existingUser)
+			return res
+				.status(409)
+				.json({ success: false, message: "Email already registered" });
 
-		if (existingUser) {
-			return res.status(409).json({
-				success: false,
-				message: "Email already registered",
-			});
-		}
-
-		// weak password check (at least 8 characters, uppercase, lowercase, number)
+		// Password validation
 		const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-
 		if (!passwordRegex.test(password)) {
 			return res.status(400).json({
 				success: false,
@@ -48,26 +44,25 @@ const signupUser = async (req, res) => {
 			photoURL: photoURL || "",
 			createdAt: new Date(),
 		};
-
-		// Insert into DB
 		const result = await usersCollection.insertOne(newUser);
 
-		// Create JWT
-		const tokenPayload = {
-			id: result.insertedId,
-			name,
-			email,
-			role: "user",
-		};
-
+		// JWT payload
+		const tokenPayload = { id: result.insertedId, name, email, role: "user" };
 		const token = jwt.sign(tokenPayload, CONFIG.jwt_secret, {
 			expiresIn: "7d",
+		});
+
+		// Set cookie
+		res.cookie("token", token, {
+			httpOnly: true,
+			secure: CONFIG.node_env === "production",
+			sameSite: CONFIG.node_env === "production" ? "none" : "lax",
+			maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
 		});
 
 		res.status(201).json({
 			success: true,
 			message: "User registered successfully",
-			token,
 			user: {
 				id: result.insertedId,
 				name,
@@ -78,10 +73,7 @@ const signupUser = async (req, res) => {
 		});
 	} catch (error) {
 		console.error("Signup error:", error);
-		res.status(500).json({
-			success: false,
-			message: "Internal server error",
-		});
+		res.status(500).json({ success: false, message: "Internal server error" });
 	}
 };
 
@@ -90,32 +82,26 @@ const signinUser = async (req, res) => {
 		const { email, password } = req.body;
 
 		// Validate input
-		if (!email || !password) {
-			return res.status(400).json({
-				success: false,
-				message: "Email and password are required",
-			});
-		}
+		if (!email || !password)
+			return res
+				.status(400)
+				.json({ success: false, message: "Email and password are required" });
 
-		// Find user by email
+		// Find user
 		const user = await usersCollection.findOne({ email });
-		if (!user) {
-			return res.status(401).json({
-				success: false,
-				message: "Invalid email or password",
-			});
-		}
+		if (!user)
+			return res
+				.status(401)
+				.json({ success: false, message: "Invalid email or password" });
 
 		// Compare password
 		const isMatch = await bcrypt.compare(password, user.password);
-		if (!isMatch) {
-			return res.status(401).json({
-				success: false,
-				message: "Invalid email or password",
-			});
-		}
+		if (!isMatch)
+			return res
+				.status(401)
+				.json({ success: false, message: "Invalid email or password" });
 
-		// Create JWT payload
+		// JWT payload
 		const tokenPayload = {
 			id: user._id,
 			name: user.name,
@@ -127,10 +113,17 @@ const signinUser = async (req, res) => {
 			expiresIn: "7d",
 		});
 
+		// Set cookie
+		res.cookie("token", token, {
+			httpOnly: true,
+			secure: CONFIG.node_env === "production",
+			sameSite: CONFIG.node_env === "production" ? "none" : "lax",
+			maxAge: 7 * 24 * 60 * 60 * 1000,
+		});
+
 		res.status(200).json({
 			success: true,
 			message: "User logged in successfully",
-			token,
 			user: {
 				id: user._id,
 				name: user.name,
@@ -141,10 +134,7 @@ const signinUser = async (req, res) => {
 		});
 	} catch (error) {
 		console.error("Signin error:", error);
-		res.status(500).json({
-			success: false,
-			message: "Internal server error",
-		});
+		res.status(500).json({ success: false, message: "Internal server error" });
 	}
 };
 
