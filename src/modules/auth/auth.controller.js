@@ -82,7 +82,7 @@ const signupUser = async (req, res) => {
 		res.status(201).json({
 			success: true,
 			message: "User registered successfully",
-			user: {
+			data: {
 				id: result.insertedId,
 				name,
 				email,
@@ -143,7 +143,7 @@ const signinUser = async (req, res) => {
 		res.status(200).json({
 			success: true,
 			message: "User logged in successfully",
-			user: {
+			data: {
 				id: user._id,
 				name: user.name,
 				email: user.email,
