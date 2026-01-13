@@ -8,7 +8,11 @@ const getAllUsers = async (req, res) => {
 			.find({})
 			.project({ password: 0 })
 			.toArray(); // exclude password
-		res.status(200).json({ success: true, users });
+		res.status(200).json({
+			success: true,
+			message: "Users retrieved successfully",
+			data: users,
+		});
 	} catch (err) {
 		console.error("Get Users Error:", err);
 		res.status(500).json({ success: false, message: "Internal server error" });

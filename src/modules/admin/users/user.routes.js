@@ -1,6 +1,6 @@
 import express from "express";
-import authorize from "../../../middlewares/auth";
-import userManagementController from "./user.controller";
+import authorize from "../../../middlewares/auth.js";
+import userManagementController from "./user.controller.js";
 const router = express.Router();
 
 // /api/v1/admin/users
