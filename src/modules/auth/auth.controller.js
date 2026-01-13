@@ -23,12 +23,31 @@ const signupUser = async (req, res) => {
 				.json({ success: false, message: "Email already registered" });
 
 		// Password validation
-		const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-		if (!passwordRegex.test(password)) {
+		if (password.length < 8) {
 			return res.status(400).json({
 				success: false,
-				message:
-					"Password must be at least 8 characters long and include uppercase, lowercase, and a number",
+				message: "Password must be at least 8 characters long",
+			});
+		}
+
+		if (!/[A-Z]/.test(password)) {
+			return res.status(400).json({
+				success: false,
+				message: "Password must include at least one uppercase letter",
+			});
+		}
+
+		if (!/[a-z]/.test(password)) {
+			return res.status(400).json({
+				success: false,
+				message: "Password must include at least one lowercase letter",
+			});
+		}
+
+		if (!/\d/.test(password)) {
+			return res.status(400).json({
+				success: false,
+				message: "Password must include at least one number",
 			});
 		}
 
