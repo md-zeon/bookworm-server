@@ -62,11 +62,19 @@ const signupUser = async (req, res) => {
 			role: "user",
 			photoURL: photoURL || "",
 			createdAt: new Date(),
+			roleUpdatedAt: new Date(), // track role updates
 		};
+
 		const result = await usersCollection.insertOne(newUser);
 
 		// JWT payload
-		const tokenPayload = { id: result.insertedId, name, email, role: "user" };
+		const tokenPayload = {
+			id: result.insertedId,
+			name,
+			email,
+			role: "user",
+			roleUpdatedAt: newUser.roleUpdatedAt, // track last role change
+		};
 		const token = jwt.sign(tokenPayload, CONFIG.jwt_secret, {
 			expiresIn: "7d",
 		});
@@ -126,6 +134,7 @@ const signinUser = async (req, res) => {
 			name: user.name,
 			email: user.email,
 			role: user.role,
+			roleUpdatedAt: user.roleUpdatedAt, // track last role change
 		};
 
 		const token = jwt.sign(tokenPayload, CONFIG.jwt_secret, {
