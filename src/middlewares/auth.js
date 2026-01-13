@@ -6,7 +6,6 @@ const authorize = (...roles) => {
 	return async (req, res, next) => {
 		try {
 			const token = req.cookies.token;
-			console.log("Auth Token:", token);
 			if (!token) {
 				return res
 					.status(401)
@@ -14,12 +13,9 @@ const authorize = (...roles) => {
 			}
 
 			const decoded = jwt.verify(token, CONFIG.jwt_secret);
-			console.log("Decoded Token:", decoded);
 
 			// Fetch the latest user from DB
 			const user = await usersCollection.findOne({ email: decoded.email });
-
-			console.log("Authenticated User:", user);
 
 			if (!user)
 				return res

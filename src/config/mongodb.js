@@ -26,3 +26,7 @@ export const db = client.db("bookwormDB");
 export const usersCollection = db.collection("users");
 export const GenreCollection = db.collection("genres");
 export const booksCollection = db.collection("books");
+
+// Create Indexes
+booksCollection.createIndex({ title: 1 });
+booksCollection.createIndex({ genre: 1 });
