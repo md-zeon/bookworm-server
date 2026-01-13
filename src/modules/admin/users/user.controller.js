@@ -29,12 +29,19 @@ const updateUserRole = async (req, res) => {
 			return res.status(400).json({ success: false, message: "Invalid role" });
 		}
 
+		// admin cannot change their own role
+		if (req.user && req.user._id.toString() === id) {
+			return res
+				.status(400)
+				.json({ success: false, message: "Cannot change your own role" });
+		}
+
 		const result = await usersCollection.updateOne(
 			{ _id: new ObjectId(id) },
-			{ $set: { role, roleUpdatedAt: new Date() } },
+			{ $set: { role, roleUpdatedAt: new Date(), updatedAt: new Date() } },
 		);
 
-		if (result.modifiedCount === 0)
+		if (result.matchedCount === 0)
 			return res
 				.status(404)
 				.json({ success: false, message: "User not found" });
@@ -59,6 +66,14 @@ const updateUserRole = async (req, res) => {
 const deleteUser = async (req, res) => {
 	try {
 		const { id } = req.params;
+
+		// admin cannot delete their own account
+		if (req.user && req.user._id.toString() === id) {
+			return res
+				.status(400)
+				.json({ success: false, message: "Cannot delete your own account" });
+		}
+
 		const result = await usersCollection.deleteOne({ _id: new ObjectId(id) });
 
 		if (result.deletedCount === 0)

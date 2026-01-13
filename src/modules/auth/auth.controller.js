@@ -15,6 +15,13 @@ const signupUser = async (req, res) => {
 			});
 		}
 
+		// email format check
+		if (!/^\S+@\S+\.\S+$/.test(email)) {
+			return res
+				.status(400)
+				.json({ success: false, message: "Invalid email format" });
+		}
+
 		// Check existing user
 		const existingUser = await usersCollection.findOne({ email });
 		if (existingUser)
@@ -61,7 +68,18 @@ const signupUser = async (req, res) => {
 			password: hashedPassword,
 			role: "user",
 			photoURL: photoURL || "",
+			readingGoals: {
+				annualGoal: 0,
+				currentYear: 0,
+				startDate: null,
+			},
+			readingStreak: {
+				current: 0,
+				longest: 0,
+				lastReadDate: null,
+			},
 			createdAt: new Date(),
+			updatedAt: new Date(),
 			roleUpdatedAt: new Date(), // track role updates
 		};
 
@@ -113,6 +131,13 @@ const signinUser = async (req, res) => {
 			return res
 				.status(400)
 				.json({ success: false, message: "Email and password are required" });
+
+		// email format check
+		if (!/^\S+@\S+\.\S+$/.test(email)) {
+			return res
+				.status(400)
+				.json({ success: false, message: "Invalid email format" });
+		}
 
 		// Find user
 		const user = await usersCollection.findOne({ email });
