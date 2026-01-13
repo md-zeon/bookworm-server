@@ -138,9 +138,28 @@ const signinUser = async (req, res) => {
 	}
 };
 
+const signoutUser = async (req, res) => {
+	try {
+		// Clear the token cookie
+		res.clearCookie("token", {
+			httpOnly: true,
+			secure: CONFIG.node_env === "production",
+			sameSite: CONFIG.node_env === "production" ? "none" : "lax",
+		});
+
+		res
+			.status(200)
+			.json({ success: true, message: "User signed out successfully" });
+	} catch (error) {
+		console.error("Signout error:", error);
+		res.status(500).json({ success: false, message: "Internal server error" });
+	}
+};
+
 const authController = {
 	signupUser,
 	signinUser,
+	signoutUser,
 };
 
 export default authController;
