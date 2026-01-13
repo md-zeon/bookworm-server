@@ -4,10 +4,13 @@ import CONFIG from "./config/index.js";
 import { connectDB } from "./config/mongodb.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import cookieParser from "cookie-parser";
+import userManagementRoutes from "./modules/admin/users/user.routes.js";
+
 const app = express();
 
+// Middlewares
 app.use(cookieParser());
-// Middleware to parse JSON bodies
+app.use(express.json());
 app.use(
 	cors({
 		origin: ["http://localhost:3000", "https://bookworm-client.vercel.app"],
@@ -15,8 +18,6 @@ app.use(
 		methods: ["GET", "POST", "PUT", "DELETE"],
 	}),
 );
-
-app.use(express.json());
 
 async function run() {
 	try {
@@ -28,6 +29,15 @@ async function run() {
 
 		// authentication routes
 		app.use("/api/v1/auth", authRoutes);
+
+		// Admin routes
+		// User management
+		app.use("/api/v1/admin/users", userManagementRoutes);
+
+		// app.use("/api/v1/admin/genres", genreManagementRoutes);
+		// app.use("/api/v1/admin/books", bookManagementRoutes);
+		// app.use("/api/v1/admin/reviews", reviewManagementRoutes);
+		// app.use("/api/v1/admin/tutorials", tutorialManagementRoutes);
 
 		// Send a ping to confirm a successful connection
 		// await client.db("admin").command({ ping: 1 });
