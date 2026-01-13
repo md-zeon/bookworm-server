@@ -5,6 +5,7 @@ import { connectDB } from "./config/mongodb.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import cookieParser from "cookie-parser";
 import userManagementRoutes from "./modules/admin/users/user.routes.js";
+import genreManagementRoutes from "./modules/admin/genres/genre.routes.js";
 
 const app = express();
 
@@ -15,7 +16,7 @@ app.use(
 	cors({
 		origin: ["http://localhost:3000", "https://bookworm-client.vercel.app"],
 		credentials: true,
-		methods: ["GET", "POST", "PUT", "DELETE"],
+		methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 	}),
 );
 
@@ -31,10 +32,13 @@ async function run() {
 		app.use("/api/v1/auth", authRoutes);
 
 		// Admin routes
+
 		// User management
 		app.use("/api/v1/admin/users", userManagementRoutes);
 
-		// app.use("/api/v1/admin/genres", genreManagementRoutes);
+		// Genre management
+		app.use("/api/v1/admin/genres", genreManagementRoutes);
+
 		// app.use("/api/v1/admin/books", bookManagementRoutes);
 		// app.use("/api/v1/admin/reviews", reviewManagementRoutes);
 		// app.use("/api/v1/admin/tutorials", tutorialManagementRoutes);

@@ -24,3 +24,5 @@ export const connectDB = async () => {
 // Database & Collections
 export const db = client.db("bookwormDB");
 export const usersCollection = db.collection("users");
+export const GenreCollection = db.collection("genres");
+export const booksCollection = db.collection("books");
