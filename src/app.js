@@ -45,6 +45,8 @@ async function run() {
 		// app.use("/api/v1/admin/reviews", reviewManagementRoutes);
 		// app.use("/api/v1/admin/tutorials", tutorialManagementRoutes);
 
+		// user routes
+
 		// Send a ping to confirm a successful connection
 		// await client.db("admin").command({ ping: 1 });
 		// console.log("Pinged your deployment. You successfully connected to MongoDB!");

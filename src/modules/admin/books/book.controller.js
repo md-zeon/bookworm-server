@@ -1,33 +1,3 @@
-/**
- * {
-  _id: ObjectId,
-  title: String,          // Required, max 200 chars
-  author: String,         // Required, max 100 chars
-  genre: ObjectId,        // Required, references Genre collection
-  description: String,    // Optional, max 2000 chars
-  coverImage: String,     // Required, Cloudinary URL
-  totalPages: Number,     // Required, minimum 1
-  averageRating: Number,  // Default 0, range 0-5
-  totalReviews: Number,   // Default 0
-  createdAt: Date,        // Default current date
-  updatedAt: Date         // Default current date
-}
-  **Indexes**:
-
-- `title`: Text index for search functionality
-- `author`: Text index for search functionality
-- `genre`: Index for filtering by genre
-- `averageRating`: Index for sorting by rating
-
-**Validation Rules** (to be implemented in application logic):
-
-- Title and author are required
-- Genre must reference an existing genre
-- Cover image URL is required
-- Total pages must be positive (minimum 1)
-- Average rating must be between 0-5
- */
-
 import { ObjectId } from "mongodb";
 import { booksCollection } from "../../../config/mongodb.js";
 
