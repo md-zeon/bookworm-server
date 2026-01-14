@@ -7,6 +7,14 @@ import cookieParser from "cookie-parser";
 import userManagementRoutes from "./modules/admin/users/user.routes.js";
 import genreManagementRoutes from "./modules/admin/genres/genre.routes.js";
 import booksManagementRoutes from "./modules/admin/books/book.routes.js";
+import adminReviewRoutes from "./modules/admin/reviews/review.routes.js";
+import settingsRoutes from "./modules/admin/settings/settings.routes.js";
+import userLibraryRoutes from "./modules/user/library/library.routes.js";
+import userReviewRoutes from "./modules/user/reviews/review.routes.js";
+import userGoalsRoutes from "./modules/user/goals/goals.routes.js";
+import userRecommendationsRoutes from "./modules/user/recommendations/recommendations.routes.js";
+import userProfileRoutes from "./modules/user/profile/profile.routes.js";
+import userBooksRoutes from "./modules/user/books/book.routes.js";
 
 const app = express();
 
@@ -15,7 +23,10 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(
 	cors({
-		origin: ["http://localhost:3000", "https://bookworm-client.vercel.app"],
+		origin: [
+			"http://localhost:3000",
+			"https://bookworm-client-zeanur-rahaman.vercel.app",
+		],
 		credentials: true,
 		methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 	}),
@@ -46,6 +57,22 @@ async function run() {
 		// app.use("/api/v1/admin/tutorials", tutorialManagementRoutes);
 
 		// user routes
+		app.use("/api/v1/user/library", userLibraryRoutes);
+		app.use("/api/v1/user/reviews", userReviewRoutes);
+		app.use("/api/v1/user", userGoalsRoutes);
+		app.use("/api/v1/user", userRecommendationsRoutes);
+
+		// Admin review routes
+		app.use("/api/v1/admin/reviews", adminReviewRoutes);
+
+		// Settings routes
+		app.use("/api/v1/admin/settings", settingsRoutes);
+
+		// User profile routes
+		app.use("/api/v1/user/profile", userProfileRoutes);
+
+		// User books routes
+		app.use("/api/v1/user/books", userBooksRoutes);
 
 		// Send a ping to confirm a successful connection
 		// await client.db("admin").command({ ping: 1 });

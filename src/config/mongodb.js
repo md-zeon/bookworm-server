@@ -26,7 +26,16 @@ export const db = client.db("bookwormDB");
 export const usersCollection = db.collection("users");
 export const GenreCollection = db.collection("genres");
 export const booksCollection = db.collection("books");
+export const userLibraryCollection = db.collection("userLibrary");
+export const reviewsCollection = db.collection("reviews");
+export const readingGoalsCollection = db.collection("readingGoals");
+export const settingsCollection = db.collection("settings");
 
 // Create Indexes
 booksCollection.createIndex({ title: 1 });
 booksCollection.createIndex({ genre: 1 });
+userLibraryCollection.createIndex({ userId: 1, bookId: 1 }, { unique: true });
+userLibraryCollection.createIndex({ userId: 1 });
+reviewsCollection.createIndex({ userId: 1, bookId: 1 }, { unique: true });
+reviewsCollection.createIndex({ bookId: 1 });
+readingGoalsCollection.createIndex({ userId: 1 }, { unique: true });
