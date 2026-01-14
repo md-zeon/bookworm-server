@@ -1,5 +1,6 @@
 import express from "express";
 import authorize from "../../../middlewares/auth.js";
+import bookController from "./book.controller.js";
 const router = express.Router();
 
 // /api/admin/books

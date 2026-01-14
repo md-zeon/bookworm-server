@@ -6,6 +6,7 @@ import authRoutes from "./modules/auth/auth.routes.js";
 import cookieParser from "cookie-parser";
 import userManagementRoutes from "./modules/admin/users/user.routes.js";
 import genreManagementRoutes from "./modules/admin/genres/genre.routes.js";
+import booksManagementRoutes from "./modules/admin/books/book.routes.js";
 
 const app = express();
 
@@ -39,7 +40,8 @@ async function run() {
 		// Genre management
 		app.use("/api/v1/admin/genres", genreManagementRoutes);
 
-		// app.use("/api/v1/admin/books", bookManagementRoutes);
+		// Book management
+		app.use("/api/v1/admin/books", booksManagementRoutes);
 		// app.use("/api/v1/admin/reviews", reviewManagementRoutes);
 		// app.use("/api/v1/admin/tutorials", tutorialManagementRoutes);
 

@@ -100,7 +100,7 @@ const createBook = async (req, res) => {
 // Get all books + search, filter, sort can be added later
 const getAllBooks = async (req, res) => {
 	try {
-		const { search, genre } = req.query;
+		const { search, genre } = req?.query;
 
 		const query = {};
 
@@ -116,13 +116,14 @@ const getAllBooks = async (req, res) => {
 		}
 
 		const books = await booksCollection.find(query).toArray();
-
+		console.log(books);
 		return res.status(200).json({
 			success: true,
 			message: "Books retrieved successfully",
 			data: books,
 		});
 	} catch (error) {
+		console.error("Error retrieving books:", error);
 		return res.status(500).json({
 			success: false,
 			message: "Internal server error",
@@ -166,7 +167,8 @@ const updateBook = async (req, res) => {
 		const { id } = req.params;
 		const { title, author, genre, description, coverImage, totalPages } =
 			req.body;
-		// Validation and update logic here
+
+		// Validation and update logic
 
 		if (!id) {
 			return res.status(400).json({
