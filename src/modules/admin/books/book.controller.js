@@ -210,7 +210,7 @@ const updateBook = async (req, res) => {
 		return res.status(200).json({
 			success: true,
 			message: "Book updated successfully",
-			data: updatedBook,
+			data: { _id: book._id, ...updatedBook },
 		});
 	} catch (error) {
 		return res.status(500).json({
